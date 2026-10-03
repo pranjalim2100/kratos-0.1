@@ -130,8 +130,10 @@ export const UploadPaper: React.FC = () => {
     addToast({
       type: 'info',
       title: 'URL Ingested',
-      message: 'Paper document fetched from repository.'
+      message: 'Paper document fetched from repository. Starting analysis...'
     });
+    // Immediately transition to analysis
+    navigate('/analysis');
   };
 
   const handleStartAnalysis = () => {

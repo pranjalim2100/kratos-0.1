@@ -43,7 +43,7 @@ export const PaperAnalysis: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Progress through analysis steps with realistic timing
+    // Progress through analysis steps with brisk timing
     setStepIndex(0);
     setIsAnalysisComplete(false);
 
@@ -54,13 +54,23 @@ export const PaperAnalysis: React.FC = () => {
         } else {
           clearInterval(stepInterval);
           setIsAnalysisComplete(true);
-          return prev + 1;
+          return analysisSteps.length;
         }
       });
-    }, 700);
+    }, 320);
 
     return () => clearInterval(stepInterval);
   }, [currentPaper]);
+
+  const handleInstantComplete = () => {
+    setStepIndex(analysisSteps.length);
+    setIsAnalysisComplete(true);
+    addToast({
+      type: 'success',
+      title: 'Analysis Extracted',
+      message: 'Paper methodology and hyperparameters parsed.'
+    });
+  };
 
   const handleRestartAnalysis = () => {
     setStepIndex(0);
@@ -86,7 +96,7 @@ export const PaperAnalysis: React.FC = () => {
             <span>Analyzing Paper</span>
             {isAnalysisComplete ? (
               <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-medium">
-                Analysis Complete
+                ✓ Analysis Complete
               </span>
             ) : (
               <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 font-medium flex items-center gap-1.5">
@@ -100,24 +110,35 @@ export const PaperAnalysis: React.FC = () => {
           </p>
         </div>
 
-        {isAnalysisComplete && (
-          <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3">
+          {!isAnalysisComplete && (
             <button
-              onClick={handleRestartAnalysis}
-              className="p-2.5 rounded-xl bg-[#12192B] border border-[#223150] text-slate-400 hover:text-slate-200 transition-colors"
-              title="Re-run analysis scan"
+              onClick={handleInstantComplete}
+              className="px-4 py-2.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-semibold flex items-center gap-1.5 transition-colors"
             >
-              <RefreshCw className="w-4 h-4" />
+              <span>⚡ Skip Animation</span>
             </button>
-            <button
-              onClick={() => navigate('/experiment/config')}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-sky-500 hover:from-cyan-300 hover:to-sky-400 text-black font-bold text-sm flex items-center gap-2 shadow-glow-cyan transition-all hover:scale-[1.02]"
-            >
-              <span>Create Reproduction Experiment</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+          )}
+
+          {isAnalysisComplete && (
+            <>
+              <button
+                onClick={handleRestartAnalysis}
+                className="p-2.5 rounded-xl bg-[#12192B] border border-[#223150] text-slate-400 hover:text-slate-200 transition-colors"
+                title="Re-run analysis scan"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigate('/experiment/config')}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-sky-500 hover:from-cyan-300 hover:to-sky-400 text-black font-bold text-sm flex items-center gap-2 shadow-glow-cyan transition-all hover:scale-[1.02]"
+              >
+                <span>Create Reproduction Experiment</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Progress Timeline Checklist */}

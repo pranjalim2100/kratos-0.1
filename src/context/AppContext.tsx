@@ -201,7 +201,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
         return nextEpoch;
       });
-    }, 1200);
+    }, 450);
   };
 
   const stopExperiment = () => {
